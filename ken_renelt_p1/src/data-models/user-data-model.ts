@@ -14,7 +14,7 @@ export class User {
         return user;
     }
 
-    constructor(userId, userName, userPassword, userFirstName, userLastName, userEmail, userRollId)
+    constructor(userId:number, userName:string, userPassword:string, userFirstName:string, userLastName:string, userEmail:string, userRollId:number)
     {
         this.userId = userId,
         this.userName = userName,
