@@ -1,12 +1,12 @@
 import React from 'react';
-import LoginComponent from './components/login/login.component';
+import { ContentComponent } from './components/architecture/content-component/content.component';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <LoginComponent />
-    </div>
+    <React.Fragment>
+      <ContentComponent />
+      </React.Fragment>
   );
 }
 
