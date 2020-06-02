@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { LoginComponent } from '../../content/login-component/login.component';
+import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
+import { ErsReimbListComponent } from '../../content/ers-reimb-list-component/ers-reimb-list.component';
 
 export const childViews = {
     login: 'LOGIN',
@@ -9,12 +11,46 @@ export const childViews = {
     statusView: 'STATUS-VIEW'// view for finance manager to view by status
 }
 
+const starterPack:Ers_reimbursment[] = [{
+    id:1,
+    amount:0.99,
+    description: 'Your first reimbursment',
+    resolved: new Date(),
+    submitted: new Date()
+},
+{
+    id:2,
+    amount:0.99,
+    description: 'Your first reimbursment',
+    resolved: new Date(),
+    submitted: new Date()
+},
+{
+    id:3,
+    amount:0.99,
+    description: 'Your first reimbursment',
+    resolved: new Date(),
+    submitted: new Date()
+},
+{
+    id:4,
+    amount:0.99,
+    description: 'Your first reimbursment',
+    resolved: new Date(),
+    submitted: new Date()
+}]
+
 interface LoginComponentProps {
     setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
 }
 
 export const ContentComponent: React.FC = () => {
-    const [view, setView] = useState('LOGIN');
+    const [view, setView] = useState('MAIN-VIEW');
+    const [reimbursments, setReimbursments] = useState<Ers_reimbursment[]>(starterPack);
+    
+    const addReimbusment = (reimb: Ers_reimbursment) => {
+        setReimbursments([...reimbursments, reimb]);
+    }
 
     const getCurrentView = () => {
     
@@ -22,6 +58,7 @@ export const ContentComponent: React.FC = () => {
         switch (view)
         {
             case childViews.login: return <LoginComponent setView={setView} />;
+            case childViews.mainView: return <ErsReimbListComponent setView={setView} reimbursments={reimbursments}></ErsReimbListComponent>
         }
     }
 

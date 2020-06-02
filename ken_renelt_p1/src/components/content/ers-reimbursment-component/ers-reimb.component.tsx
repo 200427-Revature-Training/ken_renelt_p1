@@ -11,8 +11,9 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
         <div>
             <div>{ers_reimbursment.description}</div>
             <div>{ers_reimbursment.amount}</div>
-            <div>{ers_reimbursment.submitted}</div>
-            <div>{ers_reimbursment.resolved}</div>
+            <div>{ers_reimbursment.submitted.getDate()}</div>
+            <div>{ers_reimbursment.resolved.getTime()}</div>
+            
         </div>
     )
 }
