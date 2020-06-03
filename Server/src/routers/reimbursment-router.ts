@@ -14,3 +14,16 @@ reimRouter.get('', (request, response, next) => {
         response.sendStatus(500);
     });
 })
+
+reimRouter.post('', (request, response, next) => {
+    const reimb = request.body;
+    ReimbService.createReimbursment(reimb)
+    .then(newItem => {
+        response.json(newItem);
+    }).catch(err => {
+        // console.log('err');
+        response.sendStatus(500);
+    }).finally(() => {
+        next();
+    })
+});

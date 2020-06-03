@@ -11,3 +11,19 @@ export function getAllReimbursments(): Promise<Reimbursment[]>{
         return allRows;
     })
 }
+
+
+export function createReimbursment(reim:Reimbursment): Promise<Reimbursment>{
+    const sql = '';
+
+    return db.query<ReimbursmentRow>(sql, [
+        reim.amount,
+        reim.submitted,
+        reim.resolved,
+        reim.description,
+        reim.author,
+        reim.resolver,
+        reim.statusID,
+        reim.typeID
+    ]).then(result => result.rows.map(row => Reimbursment.from(row))[0]);
+}
