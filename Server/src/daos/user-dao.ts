@@ -11,3 +11,25 @@ export function getAllUsers(): Promise<User[]>{
         return allUsers;
     });
 }
+
+export function registerUser(user:User): Promise<User>{
+  const sql = 'INSERT INTO ers_users (user_name, password, user_first_name, user_last_name, user_email, user_roll_id) Values ($1, $2, $3, $4, $5, $6)';
+
+  return db.query<UserRow>(sql, [
+    user.userName,
+    user.userPassword,
+    user.userFirstName,
+    user.userLastName,
+    user.userEmail,
+    user.userRollId
+  ]).then(result => result.rows.map(row => User.from(row))[0]);
+}
+
+export function loginUser(user:User):Promise<User> {
+  const sql = 'SELECT * from ers_users Where user_name=$1 AND password=$2';
+
+  return db.query<UserRow>(sql, [
+    user.userName,
+    user.userPassword
+  ]).then(result => result.rows.map(row => User.from(row))[0]);
+}
