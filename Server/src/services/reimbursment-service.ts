@@ -7,6 +7,13 @@ export function getAllReimbursments(): Promise<Reimbursment[]> {
     return reimBDao.getAllReimbursments();
 }
 
+export function getReimbursmentForUser(userID:number): Promise<Reimbursment[]> {
+    return reimBDao.getReimbursmentForUser(userID);
+}
 export function createReimbursment(reim:Reimbursment): Promise<Reimbursment> {
     return reimBDao.createReimbursment(reim);
+}
+
+export function patchReimbursment(reim:Reimbursment): Promise<Reimbursment>{
+    return reimBDao.patchReimbursment(reim);
 }

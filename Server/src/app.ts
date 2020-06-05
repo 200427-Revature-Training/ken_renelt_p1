@@ -16,7 +16,6 @@ app.use(bodyParser.json());
 app.use('/user', userRouter);
 app.use('/reimbursments', reimRouter);
 
-
 process.on('unhandledRejection', () => {
     db.end().then(() => {
         console.log('Database pool closed');
