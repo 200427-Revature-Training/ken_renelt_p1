@@ -1,22 +1,46 @@
 import express from 'express';
 import * as userService from '../services/user-service';
 import { User } from '../data-models/user-data-model';
+import { ifError } from 'assert';
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 export const userRouter = express.Router();
 
+const secretKey = 'justabunchofcharstolist';
+
 const users = [];
 
-userRouter.get('', (request, response, next) => {
-    console.log('i am user-router');
-   userService.getAllUsers().then(users => {
-    response.json(users);
-    next();
-   }).catch(err => {
-       console.log(err);
-       response.sendStatus(500);
-   });
+const authenticateToken = (req, res, next) => {
+    console.log('am i verifying' + req.headers.authorization);
+
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if(token == null)
+        return res.sendStatus(401);
+
+    jwt.verify(token, secretKey, (err, user) => {
+        console.log('am i verified');
+        if(err){
+            console.log(err);
+            return res.sendStatus(403);
+        }
+        req.user = user;
+        next();
+    })
+}
+// need to add the authenticateToken to this
+userRouter.get('', authenticateToken, (request, response, next) => {
+
+    userService.getAllUsers().then(users => {
+        response.json(users);
+        next();
+        }).catch(err => {
+            console.log(err);
+            response.sendStatus(500);
+        });
 });
 
 userRouter.post('/register', async (request, response, next) => {
@@ -57,20 +81,8 @@ userRouter.post('/register', async (request, response, next) => {
         })
     });
 });
-/*
-    postman settings 
-    http://localhost:3000/user/register
-     {
-        "userName": "erikTheBikeman",
-        "userPassword": "biker",
-        "userFirstName": "erick",
-        "userLastName": "walker",
-        "userEmail": "erick@email.com",
-        "userRollId": 2
-    }
- */
 
-userRouter.get('/login', async (request, response, next) => {
+userRouter.post('/login', async (request, response, next) => {
     console.log('I am login route')
 
         const user:any = {
@@ -87,12 +99,8 @@ userRouter.get('/login', async (request, response, next) => {
             bcrypt.compare(request.body.userPassword, users.userPassword).then((result) => {
                if(result)
                {
-                    response.json(users);
-                    console.log("i am user - router = user =" + users);
-                    if(users)
-                    {
-                        console.log('i am a user now' + users.userName);
-                    }
+                    const accessToken = jwt.sign(user, secretKey);
+                    response.json(accessToken);
                     next();
                 }
                 else
@@ -108,9 +116,36 @@ userRouter.get('/login', async (request, response, next) => {
         });
 
 });
- //   "userPassword": "$2b$10$J/6fztlQsp7FOvqxdYAdzuWhiXBPyIejO2uEjEcD5FgMD/Z/mXjq2",
 
-/*  this was a good register post
+
+// npm jsonwebtoken
+/*
+ http://localhost:3000/user/
+    {
+        "userName": "erikTheBikeman",
+        "userPassword": "biker",
+        "userFirstName": "erick",
+        "userLastName": "walker",
+        "userEmail": "erick@email.com",
+        "userRollId": 2
+    }
+    under the headers section after you log in change the value to the token the login gives you
+key =Authorization
+value = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImVyaWtUaGVCaWtlbWFuIiwidXNlclBhc3N3b3JkIjoiYmlrZXIiLCJ1c2VyRmlyc3ROYW1lIjoiZXJpY2siLCJ1c2VyTGFzdE5hbWUiOiJ3YWxrZXIiLCJ1c2VyRW1haWwiOiJ3YWxrZXIiLCJ1c2VyUm9sbElkIjoyLCJpYXQiOjE1OTE1NTI3MzV9.ay7Of1lFpPR1tk_UKywIs7t4flnj9jc6_RLH7yXFcHo
+
+
+    postman settings
+    http://localhost:3000/user/register
+     {
+        "userName": "erikTheBikeman",
+        "userPassword": "biker",
+        "userFirstName": "erick",
+        "userLastName": "walker",
+        "userEmail": "erick@email.com",
+        "userRollId": 2
+    }
+
+this was a good register post
   http://localhost:3000/user/register
 {
     "userName": "Postman",
@@ -121,73 +156,22 @@ userRouter.get('/login', async (request, response, next) => {
     "userRollId": 1
 }
 
-http://localhost:3000/user/login
 
-    {
-        "userName": "Postman",
-        "userPassword": "manpost"
-    }
 
     http://localhost:3000/user
     returns all users
 
 
-    userRouter.post('/register', async (request, response, next) => {
-
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hashPassword(request.body.userPassword, salt);
-    
-    console.log( ' whats my hash' + hashPassword);
-    const user:any = {
-       userName: request.body.userName,
-       userPassword: hashPassword,
-       userFirstName: request.body.userFirstName,
-       userLastName: request.body.userLastName,
-       userEmail: request.body.userLastName
-    };
-
-    console.log('whats in the body' + request.body.user);
-    
-   userService.createUser(user).then(users => {
-    response.json(users);
-    next();
-   }).catch(err => {
-       console.log(err);
-       response.sendStatus(500);
-   });
-});
-
-
-userRouter.get('/login', async (request, response, next) => {
-
-    const saltLogin = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hashPassword(request.body.userPassword, saltLogin);
-
-
-    const user:any = {
-        userName: request.body.userName,
-        userPassword: hashPassword,
-        userEmail: request.body.userLastName
-     };
-
-    console.log('whats in the body' + request.body.user);
-    const salt = await bcrypt.genSalt(10);
-
-
-   userService.loginUser(user).then(users => {
-    response.json(users);
-    console.log("i am user - router = user =" + users);
-    if(users)
+    this is a good login from postman
+    http://localhost:3000/user/login
     {
-        console.log('i am a user now' + users.userName);
+        "userName": "erikTheBikeman",
+        "userPassword": "biker",
+        "userFirstName": "erick",
+        "userLastName": "walker",
+        "userEmail": "erick@email.com",
+        "userRollId": 2
     }
-    next();
-   }).catch(err => {
-       console.log(err);
-       response.sendStatus(500);
-   });
-});
-
  */
 
  
