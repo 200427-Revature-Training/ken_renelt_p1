@@ -12,6 +12,6 @@ export function createUser(user:User): Promise<User>{
 }
 
 export function loginUser(user:User): Promise<User>{
-    console.log('user login service');
+    console.log('user login service' + user);
     return userDao.loginUser(user);
 }

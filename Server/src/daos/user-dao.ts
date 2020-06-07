@@ -26,12 +26,9 @@ export function registerUser(user:User): Promise<User>{
 }
 
 export function loginUser(user:User):Promise<User> {
-  const sql = 'SELECT * from ers_users Where user_name=$1 AND password=$2';
+  const sql = 'SELECT * from ers_users Where user_name=$1';
 
   return db.query<UserRow>(sql, [
-    user.userName,
-    user.userPassword
-  ]).then(
-    result => result.rows.map(row => User.from(row))[0]
-    );
+    user.userName
+  ]).then(result => result.rows.map(row => User.from(row))[0]);
 }

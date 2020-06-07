@@ -20,16 +20,14 @@ userRouter.get('', (request, response, next) => {
 });
 
 userRouter.post('/register', async (request, response, next) => {
-    console.log('register log' + request.body.userPassword);
 
     const salt = 10;
 
     let hashPassword = '';
-     await bcrypt.genSalt(salt, function(err, salt) {
+     await bcrypt.genSalt(salt, (err, salt) => {
         bcrypt.hash(request.body.userPassword, salt, (err, hash) => {
         hashPassword = hash;
-        console.log('am i here register' + hash);
-        console.log('i am hashpassword' + hashPassword);
+
         if(err)
         {
             console.log(err);
@@ -37,7 +35,7 @@ userRouter.post('/register', async (request, response, next) => {
             response.sendStatus(500);
         }
         else{
-            console.log( ' whats my hash' + hashPassword);
+           // console.log( ' whats my hash' + hashPassword);
             const user:any = {
             userName: request.body.userName,
             userPassword: hashPassword,
@@ -47,7 +45,7 @@ userRouter.post('/register', async (request, response, next) => {
             userRollId: request.body.userRollId
             };
 
-            console.log('whats in the body' + user.userPassword);
+           // console.log('whats in the body' + user.userPassword);
                 userService.createUser(user).then(users => {
                     response.json(users);
                     next();
@@ -72,23 +70,45 @@ userRouter.post('/register', async (request, response, next) => {
     }
  */
 
-userRouter.get('/login', (request, response, next) => {
-    const user = request.body;
-    console.log('whats in the body' + request.body.user);
+userRouter.get('/login', async (request, response, next) => {
+    console.log('I am login route')
 
-   userService.loginUser(user).then(users => {
-    response.json(users);
-    console.log("i am user - router = user =" + users);
-    if(users)
-    {
-        console.log('i am a user now' + users.userName);
-    }
-    next();
-   }).catch(err => {
-       console.log(err);
-       response.sendStatus(500);
-   });
+        const user:any = {
+            userName: request.body.userName,
+            userPassword: request.body.userPassword,
+            userFirstName: request.body.userFirstName,
+            userLastName: request.body.userLastName,
+            userEmail: request.body.userLastName,
+            userRollId: request.body.userRollId
+            };
+
+        userService.loginUser(user).then(users => {
+
+            bcrypt.compare(request.body.userPassword, users.userPassword).then((result) => {
+               if(result)
+               {
+                    response.json(users);
+                    console.log("i am user - router = user =" + users);
+                    if(users)
+                    {
+                        console.log('i am a user now' + users.userName);
+                    }
+                    next();
+                }
+                else
+                {
+                    // send status that password was wrong
+                    response.sendStatus(500);
+                }
+            });
+
+        }).catch(err => {
+            console.log(err);
+            response.sendStatus(500);
+        });
+
 });
+ //   "userPassword": "$2b$10$J/6fztlQsp7FOvqxdYAdzuWhiXBPyIejO2uEjEcD5FgMD/Z/mXjq2",
 
 /*  this was a good register post
   http://localhost:3000/user/register
