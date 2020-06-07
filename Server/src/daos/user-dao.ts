@@ -31,5 +31,7 @@ export function loginUser(user:User):Promise<User> {
   return db.query<UserRow>(sql, [
     user.userName,
     user.userPassword
-  ]).then(result => result.rows.map(row => User.from(row))[0]);
+  ]).then(
+    result => result.rows.map(row => User.from(row))[0]
+    );
 }
