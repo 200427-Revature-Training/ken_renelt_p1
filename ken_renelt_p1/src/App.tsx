@@ -1,11 +1,11 @@
 import React from 'react';
-import { ContentComponent } from './components/architecture/content-component/content.component';
 import './App.css';
+import { MainComponent } from './components/main.component';
 
 function App() {
   return (
     <React.Fragment>
-      <ContentComponent />
+      <MainComponent />
       </React.Fragment>
   );
 }

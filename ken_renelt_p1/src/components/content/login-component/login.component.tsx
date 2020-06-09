@@ -1,30 +1,77 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { CssBaseline, Button, Box, Avatar, Typography, TextField, makeStyles, Container } from '@material-ui/core';
 
-interface LoginComponentProps {
-    setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
-}
-
-export const LoginComponent: React.FC<LoginComponentProps> = (props) => {
-
-    //const [clickInput, setClickInput] = useState(0);
-    const [userClicks, setUserClicks] = useState(0);
-
-const LoginSubmit = () => {
-    console.log('I am login component');
-    // what is the best method to call the server in react
-    // find out add it here
-};
+const useStyles = makeStyles((theme) => ({
+    root: {
+      height: '100vh',
+    },
+    paper: {
+      margin: theme.spacing(8, 4),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
+  
+export const LoginComponent: React.FC = () => {
+    const classes = useStyles();
 
     return (
-        <main>
-            <section id="content-component">
-                <input type="text" placeholder="user name"></input>
-                <input type="password" placeholder="password"></input>
-            </section>
-            <section>
-                <button onClick={() => LoginSubmit()}>Add Click</button>
-            </section>
-        </main>
-    )
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+            </form>
+          </div>
+          <Box mt={8}>
+          </Box>
+        </Container>
+      );
 }
-// export default ClickerComponent;

@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { LoginComponent } from '../../content/login-component/login.component';
 import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
-import { ErsReimbListComponent } from '../../content/ers-reimb-list-component/ers-reimb-list.component';
-import { UserComponent } from '../../content/ers-user.component';
 import { User } from '../../../data-models/user-data-model';
 
 export const childViews = {
@@ -57,27 +54,27 @@ interface ContentComponentProps {
    user: User
 }
 
-export const ContentComponent: React.FC = (props) => {
-    const [view, setView] = useState('MAIN-VIEW');
-    const [reimbursments, setReimbursments] = useState<Ers_reimbursment[]>(starterPack);
-    const [user, setUser] = useState<User>(testUser);
-    const addReimbusment = (reimb: Ers_reimbursment) => {
-        setReimbursments([...reimbursments, reimb]);
-    }
+//export const ContentComponent: React.FC = () => {
+    //const [view, setView] = useState('MAIN-VIEW');
+  //  const [reimbursments, setReimbursments] = useState<Ers_reimbursment[]>(starterPack);
+  //  const [user, setUser] = useState<User>(testUser);
+   // const addReimbusment = (reimb: Ers_reimbursment) => {
+  //      setReimbursments([...reimbursments, reimb]);
+   // }
 
     const getCurrentView = () => {
     
-        console.log('wahts my view = '+ view);
-        switch (view)
-        {
-            case childViews.login: return <LoginComponent setView={setView} />;
-            case childViews.mainView: return <UserComponent user={user} setView={setView} listofReimb={reimbursments}></UserComponent>
-        }
-    }
+       // console.log('wahts my view = '+ view);
+      //  switch (view)
+      //  {
+           // case childViews.login: return <LoginComponent setView={setView} />;
+           // case childViews.mainView: return <UserComponent user={user} setView={setView} listofReimb={reimbursments}></UserComponent>
+       // }
+  //  }
 
     return (
         <main>
-            {getCurrentView()}
+           // {getCurrentView()}
         </main>
     )
 }
