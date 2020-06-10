@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, makeStyles, Menu, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -34,6 +34,7 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
           <AppBar position="static">
             <Toolbar>
                 <div>
+                  
                   <IconButton
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
@@ -73,6 +74,6 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
     }
 
 
-const mapDispatchToProps = {};
+// const mapDispatchToProps = {};
 
 export default withRouter(NavComponent);

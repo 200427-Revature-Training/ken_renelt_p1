@@ -29,6 +29,17 @@ const authenticateToken = (req, res, next) => {
     })
 }
 
+reimRouter.get('', (request, response, next) => {
+    ReimbService.getAllReimbursments().then(reimbursments => {
+        response.json(reimbursments);
+        next();
+    }).catch(err => {
+        console.log(err);
+        response.sendStatus(500);
+    });
+})
+
+/*
 reimRouter.get('', authenticateToken, (request, response, next) => {
     ReimbService.getAllReimbursments().then(reimbursments => {
         response.json(reimbursments);
@@ -38,6 +49,7 @@ reimRouter.get('', authenticateToken, (request, response, next) => {
         response.sendStatus(500);
     });
 })
+*/
 
 
 reimRouter.get('/:id', authenticateToken, (request, response, next) => {

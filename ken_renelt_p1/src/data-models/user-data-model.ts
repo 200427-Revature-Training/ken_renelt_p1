@@ -35,3 +35,8 @@ export interface UserRow {
     user_email:string;
     user_roll_id:number;
 }
+
+export interface userLoginCredentials {
+    user_name:string;
+    user_password:string;
+}

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CssBaseline, Button, Box, Avatar, Typography, TextField, makeStyles, Container } from '@material-ui/core';
+import * as userRemote from '../../../remotes/user-remote';
+import { RouteComponentProps, withRouter } from 'react-router';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,9 +27,31 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-export const LoginComponent: React.FC = () => {
-    const classes = useStyles();
+ const LoginComponent: React.FC<RouteComponentProps> = (props) => {
+ // let history = props.history;
+  const classes = useStyles();
 
+    useEffect(() => {
+    }, []);
+
+    const [inputUserName, setInputUserName] = useState('');
+    const [inputPassword, setInputPassword] = useState('');
+   
+    const loginUser = async () => {
+      console.log('i am trying to login ');
+      const payload = {user_name: inputUserName, user_password: inputPassword};
+        const response = await userRemote.login(payload);
+        setInputPassword('');
+        setInputUserName('');
+
+        const userRole = response.data.userRole
+        const authToken = response.data.accessToken;
+        localStorage.setItem('accessToken', authToken)
+        localStorage.setItem('userRole', userRole)
+        console.log(localStorage.getItem('accessToken'));
+        console.log(localStorage.getItem('userRole'));
+    
+  }
     return (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -42,22 +67,26 @@ export const LoginComponent: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                value={inputUserName}
+                id="username"
+                label="User Name"
+                name="user-name"
+                autoComplete="user-name"
                 autoFocus
+                onChange={(e) => setInputUserName(e.target.value) }
               />
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
+                value={inputPassword}
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setInputPassword(e.target.value) }
               />
               <Button
                 type="submit"
@@ -65,6 +94,7 @@ export const LoginComponent: React.FC = () => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
+                onClick={() => loginUser() }
               >
                 Sign In
               </Button>
@@ -74,4 +104,6 @@ export const LoginComponent: React.FC = () => {
           </Box>
         </Container>
       );
-}
+};
+
+export default withRouter(LoginComponent);
