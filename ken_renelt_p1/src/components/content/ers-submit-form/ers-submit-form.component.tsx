@@ -1,6 +1,7 @@
-
+import * as userRemote from '../../../remotes/user-remote';
 import React, { useState } from 'react';
-import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles } from '@material-ui/core';
+import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles, unstable_createMuiStrictModeTheme } from '@material-ui/core';
+import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
 
 //interface LoginComponentProps {
  //   setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
@@ -38,10 +39,24 @@ export const ErsSubmitForm: React.FC = () => {
    const [inputreciept, setInputreciept] = useState('');
 
    const classes = useStyles();
-    const submitReimbursment = () => {
+    const submitReimbursment = async () => {
     console.log('I am ers reimb form component');
-    // what is the best method to call the server in react
-    // find out add it here
+
+    const amountTo:number = parseInt(inputTotalAmount);
+    let authorId:any = (localStorage.getItem('userId'));
+  
+    const payload:Ers_reimbursment = {
+      id:1,
+      amount:amountTo,
+      author:authorId,
+      description:inputDescription,
+      submitted: new Date(),
+      resolved: new Date(),
+      typeID:parseInt(inputTypeId)
+    }
+
+    console.log(inputTypeId);
+    const response = await userRemote.postForm(payload);
 };
 
 return (
@@ -107,7 +122,8 @@ return (
             autoComplete="reciept"
             onChange={(e) => setInputreciept(e.target.value) }
           />
-          <Button
+        </form>
+        <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -117,7 +133,6 @@ return (
           >
             Submition
           </Button>
-        </form>
       </div>
       <Box mt={8}>
       </Box>

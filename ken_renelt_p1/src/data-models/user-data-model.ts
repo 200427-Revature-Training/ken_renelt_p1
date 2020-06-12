@@ -37,6 +37,6 @@ export interface UserRow {
 }
 
 export interface userLoginCredentials {
-    user_name:string;
-    user_password:string;
+    userPassword:string;
+    userName:string;
 }

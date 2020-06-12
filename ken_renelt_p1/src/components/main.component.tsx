@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Route , Switch} from 'react-router-dom';
 import NavComponent from './architecture/nav-bar-component/nav-bar.component';
 import { UserComponent } from './content/ers-user.component';
@@ -6,6 +6,7 @@ import LoginComponent from './content/login-component/login.component';
 import { ErsSubmitForm } from './content/ers-submit-form/ers-submit-form.component';
 
 export const MainComponent: React.FC = () => {
+    
     return <div>
         <BrowserRouter>
             <NavComponent></NavComponent>
@@ -14,7 +15,7 @@ export const MainComponent: React.FC = () => {
                     <Route path = "/login">
                         <LoginComponent></LoginComponent>
                     </Route>
-                    <Route path='/user'>
+                    <Route path='/reimbursments'>
                         <UserComponent></UserComponent>
                     </Route>
                     <Route path='/form'>

@@ -8,11 +8,10 @@ interface ErsReimbProps {
 }
 
 export const ErsReimbListComponent: React.FC<ErsReimbProps> = (props) => {
-
-
     const renderReimListComponents = () => {
+        console.log('how many = ' + props.reimbursments.length);
         return props.reimbursments.map(reim => {
-            return (<ErsReimbComponent ers_reimbursment={reim} ></ErsReimbComponent>)
+            return (<ErsReimbComponent key={reim.id} ers_reimbursment={reim} ></ErsReimbComponent>)
         })
     }
 

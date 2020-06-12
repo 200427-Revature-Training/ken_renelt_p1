@@ -59,7 +59,7 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
                     open={Boolean(anchorEl)}
                     onClose={() =>setAnchorEl(null)}
                   >
-                    <MenuItem onClick={() => props.history.push('/user')}>Profile</MenuItem>
+                    <MenuItem onClick={() => props.history.push('/reimbursments')}>Profile</MenuItem>
                     <MenuItem onClick={() => props.history.push('/form')}>Form submit</MenuItem>
                   </Menu>
 

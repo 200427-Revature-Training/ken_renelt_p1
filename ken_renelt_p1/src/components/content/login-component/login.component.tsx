@@ -4,6 +4,10 @@ import * as userRemote from '../../../remotes/user-remote';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 
+interface logInProps {
+  setView: ( str: 'LOGIN' | 'USER' | 'FORM' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
+}
+
 const useStyles = makeStyles((theme) => ({
     root: {
       height: '100vh',
@@ -28,32 +32,33 @@ const useStyles = makeStyles((theme) => ({
   }));
   
  const LoginComponent: React.FC<RouteComponentProps> = (props) => {
- // let history = props.history;
+
   const classes = useStyles();
 
     useEffect(() => {
     }, []);
 
+    const [view, setView] = useState('LOGIN');
     const [inputUserName, setInputUserName] = useState('');
     const [inputPassword, setInputPassword] = useState('');
-   
+    let isConnected = false;
     const loginUser = async () => {
-      console.log('i am trying to login ');
-      const payload = {user_name: inputUserName, user_password: inputPassword};
+      const payload = {userName: inputUserName, userPassword: inputPassword};
         const response = await userRemote.login(payload);
         setInputPassword('');
         setInputUserName('');
 
-        const userRole = response.data.userRole
-        const authToken = response.data.accessToken;
-        localStorage.setItem('accessToken', authToken)
-        localStorage.setItem('userRole', userRole)
-        console.log(localStorage.getItem('accessToken'));
-        console.log(localStorage.getItem('userRole'));
-    
-  }
-    return (
-        <Container component="main" maxWidth="xs">
+
+        isConnected = (localStorage.getItem('accessToken') != '') ? true : false;
+        console.log('am i connected = ' + isConnected);
+       // setView('LOGGEDIN');
+        //renderComponents();
+        props.history.push('/reimbursments');
+        console.log('push it ');
+      }
+  
+      return (
+          <Container className='hidden' component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
@@ -88,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
                 autoComplete="current-password"
                 onChange={(e) => setInputPassword(e.target.value) }
               />
-              <Button
+            </form>
+            <Button
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -98,12 +104,12 @@ const useStyles = makeStyles((theme) => ({
               >
                 Sign In
               </Button>
-            </form>
           </div>
           <Box mt={8}>
           </Box>
         </Container>
-      );
-};
+      
+        );
+  };
 
 export default withRouter(LoginComponent);

@@ -90,7 +90,7 @@ userRouter.post('/login', async (request, response, next) => {
             userPassword: request.body.userPassword,
             userFirstName: request.body.userFirstName,
             userLastName: request.body.userLastName,
-            userEmail: request.body.userLastName,
+            userEmail: request.body.userEmail,
             userRollId: request.body.userRollId
             };
 
@@ -100,7 +100,11 @@ userRouter.post('/login', async (request, response, next) => {
                if(result)
                {
                     const accessToken = jwt.sign(user, secretKey);
-                    response.json(accessToken);
+                    const body = {
+                        accessToken: {accessToken},
+                        newUser: users
+                    }
+                    response.json(body);
                     next();
                 }
                 else
@@ -120,7 +124,7 @@ userRouter.post('/login', async (request, response, next) => {
 
 // npm jsonwebtoken
 /*
- http://localhost:3000/user/
+ http://localhost:3001/user/
     {
         "userName": "erikTheBikeman",
         "userPassword": "biker",
@@ -135,7 +139,7 @@ value = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImVyaWtUaGVC
 
 
     postman settings
-    http://localhost:3000/user/register
+    http://localhost:3001/user/register
      {
         "userName": "erikTheBikeman",
         "userPassword": "biker",
@@ -146,7 +150,7 @@ value = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImVyaWtUaGVC
     }
 
 this was a good register post
-  http://localhost:3000/user/register
+  http://localhost:3001/user/register
 {
     "userName": "Postman",
     "userPassword": "manpost",
@@ -158,12 +162,12 @@ this was a good register post
 
 
 
-    http://localhost:3000/user
+    http://localhost:3001/user
     returns all users
 
 
     this is a good login from postman
-    http://localhost:3000/user/login
+    http://localhost:3001/user/login
     {
         "userName": "erikTheBikeman",
         "userPassword": "biker",
@@ -173,5 +177,3 @@ this was a good register post
         "userRollId": 2
     }
  */
-
- 

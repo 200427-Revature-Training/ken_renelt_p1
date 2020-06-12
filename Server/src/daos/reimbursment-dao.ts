@@ -1,5 +1,6 @@
 import { db } from './db';
 import { Reimbursment, ReimbursmentRow } from '../data-models/reimbursment-model';
+import { stringify } from 'querystring';
 
 // read
 export function getAllReimbursments(): Promise<Reimbursment[]>{
@@ -29,6 +30,8 @@ export function getReimbursmentForUser(userId:number): Promise<Reimbursment[]>{
 
 // post
 export function createReimbursment(reim:Reimbursment): Promise<Reimbursment>{
+    console.log(JSON.stringify(reim));
+
     const sql = 'INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_description, reimb_author, reimb_type_id) \
     VALUES ($1, $2, $3, $4, $5) RETURNING *';
 

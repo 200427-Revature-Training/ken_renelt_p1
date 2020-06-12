@@ -10,7 +10,7 @@ const reimbList:Ers_reimbursment[] = [];
 
 interface userProps {
     user: User,
-    listofReimb:Ers_reimbursment[],
+    // listofReimb:Ers_reimbursment[],
     //setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
 }
 export const UserComponent: React.FC = () => {
@@ -22,23 +22,33 @@ export const UserComponent: React.FC = () => {
         setReimbursments([...reimbursments, reimb]);
     }
 
-    const addReim = () => {
-        let reimb:Ers_reimbursment[] = [];
-        userRemote.getAllReim().then(reim => {
-           reim.map(r => {
-            addReimbusment(r);
-           })
-        })
+    useEffect(() => {
+        addReim();
+    },[]);
+
+
+    let userRole = localStorage.getItem('userRole'); 
+
+    const addReim = () => {    
+        console.log('whats my userRole = ' + userRole);
+        if(userRole != '')
+        {
+            if(userRole == '1')
+            {
+                userRemote.getAllReim().then(reim => {
+                return  setReimbursments(reim);
+                })
+ 
+            }
+            else
+            {
+                console.log('user roll anything else');
+                userRemote.getUserReim().then(reim => {
+                    return setReimbursments(reim);
+                })
+            }
+        }
     }
-    
-    useEffect(() => {},[]);
-    addReim();
-   // const getAllReimbForUser = () => {
-    //    peopleRemote.getAllPeople().then(people => {
-     //       setUsers(people);
-     //   });        
- //   }
-//  <h3>Welcome {userName}</h3> // add this to header
     return (
         
     <section id="user-comp" className="container">

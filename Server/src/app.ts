@@ -4,15 +4,18 @@ import bodyParser from 'body-parser';
 import { userRouter } from './routers/user-router';
 import { db } from '../src/daos/db';
 import { reimRouter } from './routers/reimbursment-router';
+import cors from 'cors';
 
 const app = express();
 
 const port = process.env.PORT || 3001;
 
+app.use(cors());
+
 app.set('port', port);
 
 app.use(bodyParser.json());
-
+/*
 app.use((request, response, next) => {
     console.log(request);
     response.setHeader("Access-Control-Allow-Origin", "*");
@@ -27,6 +30,7 @@ app.use((request, response, next) => {
     response.setHeader('Access-Control-Allow-Headers', 'content-type, authorization')
     next();
  });
+*/
 
 app.use('/user', userRouter);
 app.use('/reimbursments', reimRouter);
