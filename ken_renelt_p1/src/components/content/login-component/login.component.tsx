@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   const classes = useStyles();
 
     useEffect(() => {
+      loginUser();
     }, []);
 
     const [view, setView] = useState('LOGIN');

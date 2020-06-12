@@ -1,0 +1,6 @@
+.logOut {
+    display: flex;
+    float: right;
+    border: 2px solid rgb(33, 2, 119);
+    border-radius: 15%;
+}
