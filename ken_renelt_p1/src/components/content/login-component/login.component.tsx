@@ -42,20 +42,18 @@ const useStyles = makeStyles((theme) => ({
     const [inputUserName, setInputUserName] = useState('');
     const [inputPassword, setInputPassword] = useState('');
     let isConnected = false;
+   
     const loginUser = async () => {
       const payload = {userName: inputUserName, userPassword: inputPassword};
-        const response = await userRemote.login(payload);
+       
+      const response = await userRemote.login(payload).then(() => {
+        props.history.push('/reimbursments');
+       }
+      );
+  
         setInputPassword('');
         setInputUserName('');
-
-
-        isConnected = (localStorage.getItem('accessToken') != '') ? true : false;
-        console.log('am i connected = ' + isConnected);
-       // setView('LOGGEDIN');
-        //renderComponents();
-        props.history.push('/reimbursments');
-        console.log('push it ');
-      }
+      };
   
       return (
           <Container className='hidden' component="main" maxWidth="xs">

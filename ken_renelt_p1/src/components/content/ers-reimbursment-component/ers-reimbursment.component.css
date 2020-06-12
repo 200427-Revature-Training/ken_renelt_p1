@@ -1,9 +1,8 @@
 #ers-list{
     border: solid 2px black;
-    width: 40vw;
 }
 
 #listButton {
-    width: 100px;
+    width: 20vw;
     height: 50px;
 }

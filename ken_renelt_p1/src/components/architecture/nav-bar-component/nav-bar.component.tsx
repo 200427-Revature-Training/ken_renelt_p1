@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
       marginRight: theme.spacing(2),
     },
+    logOut: 
+    {
+      float: "right"
+    },
   }));
 
 export const NavComponent:React.FC<RouteComponentProps> = (props) => {
@@ -28,7 +32,12 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
             userPassword: '',
             userRollId: 1
         }
-        const userName = (user.userName) ? user.userName : 'Guest';
+
+        const logOutButton = () => {
+          localStorage.clear();
+          props.history.push('/login');
+        }
+
         return (
        <div className={classes.root}>
           <AppBar position="static">
@@ -65,15 +74,23 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
 
                 </div>
                 <Typography variant="h6" >
-                WELCOME {userName}
+                WELCOME 
               </Typography>
+              <IconButton
+                    className="logOut"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={() => logOutButton()}
+                    color="inherit"
+                  >
+                    Log Out
+                 
+                  </IconButton>
             </Toolbar>
           </AppBar>
         </div>
       );
     }
-
-
-// const mapDispatchToProps = {};
 
 export default withRouter(NavComponent);

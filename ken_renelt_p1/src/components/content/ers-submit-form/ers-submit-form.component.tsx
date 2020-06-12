@@ -2,6 +2,7 @@ import * as userRemote from '../../../remotes/user-remote';
 import React, { useState } from 'react';
 import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles, unstable_createMuiStrictModeTheme } from '@material-ui/core';
 import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 //interface LoginComponentProps {
  //   setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
@@ -30,8 +31,27 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-export const ErsSubmitForm: React.FC = () => {
+export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
 
+  if(localStorage.getItem('accessToken'))
+  {
+      console.log('I have a token' + localStorage.getItem('accessToken'));
+      if(localStorage.getItem('accessToken')?.length)
+      {
+          console.log('im inside length');
+      }
+      else
+      {
+          console.log('I am pushing to login');
+          props.history.push('/login');
+      }
+  }
+  else
+  {
+      console.log('I must be null' + localStorage.getItem('accessToken'))
+      props.history.push('/login');
+  }
+  
    const [inputTotalAmount, setInputTotalAmount] = useState('');
    const [inputDescription, setInputDescription] = useState('');
    const [inputTypeId, setInputTypeId] = useState('');
@@ -57,6 +77,13 @@ export const ErsSubmitForm: React.FC = () => {
 
     console.log(inputTypeId);
     const response = await userRemote.postForm(payload);
+
+    setInputTotalAmount('');
+    setInputDescription('');
+    setInputTypeId('');
+    setInputreciept('');
+
+
 };
 
 return (
@@ -139,6 +166,7 @@ return (
     </Container>
   );
 }
-// export default ClickerComponent;
+
+export default withRouter(ErsSubmitForm);
 
 

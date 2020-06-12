@@ -5,6 +5,7 @@ import { ErsReimbListComponent } from './ers-reimb-list-component/ers-reimb-list
 import './ers-user.component.css';
 import { Typography } from '@material-ui/core';
 import * as userRemote from '../../remotes/user-remote';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 const reimbList:Ers_reimbursment[] = [];
 
@@ -13,9 +14,29 @@ interface userProps {
     // listofReimb:Ers_reimbursment[],
     //setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
 }
-export const UserComponent: React.FC = () => {
+export const UserComponent: React.FC<RouteComponentProps> = (props) => {
    // const [view, setView] = useState('MAIN-VIEW');
     //const userName = (userProps.user.userName) ? userProps.user.userName : "login";
+
+    if(localStorage.getItem('accessToken'))
+    {
+        console.log('I have a token' + localStorage.getItem('accessToken'));
+        if(localStorage.getItem('accessToken')?.length)
+        {
+            console.log('im inside length');
+        }
+        else
+        {
+            console.log('I am pushing to login');
+            props.history.push('/login');
+        }
+    }
+    else
+    {
+        console.log('I must be null' + localStorage.getItem('accessToken'))
+        props.history.push('/login');
+    }
+    
     const [reimbursments, setReimbursments] = useState<Ers_reimbursment[]>(reimbList);
     
     const addReimbusment = (reimb: Ers_reimbursment) => {
@@ -61,3 +82,5 @@ export const UserComponent: React.FC = () => {
     </section>
     );
 }
+
+export default withRouter(UserComponent);
