@@ -45,6 +45,8 @@ const useStyles = makeStyles((theme) => ({
     let isConnected = false;
    
     const loginUser = async () => {
+      if(inputUserName.length < 1 || inputPassword.length < 1)
+        return;
       const payload = {userName: inputUserName, userPassword: inputPassword};
        
       const response = await userRemote.login(payload).then(() => {

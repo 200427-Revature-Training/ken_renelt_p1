@@ -40,6 +40,7 @@ export const getUserReim = async () => {
     localStorage.setItem('accessToken', response.data.accessToken.accessToken)
     localStorage.setItem('userRole', userRoleString);
     localStorage.setItem('userId', response.data.newUser.userId.toString());
+    localStorage.setItem('userName', response.data.newUser.userName);
     return response;
 }
 
@@ -48,5 +49,6 @@ export const postForm = async (payload:Ers_reimbursment) => {
     return response;
 }
 
-
-// userID 21 = erikTheBikeman 
+export const approveTicket = async (payload:any) => {
+    const response = await internalAxios.patch<Ers_reimbursment>('/reimbursments', payload);
+}

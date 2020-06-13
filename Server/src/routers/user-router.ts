@@ -115,7 +115,7 @@ userRouter.post('/login', async (request, response, next) => {
             });
 
         }).catch(err => {
-            console.log(err);
+            console.log('user-router post ' + err);
             response.sendStatus(500);
         });
 

@@ -34,12 +34,14 @@ app.use((request, response, next) => {
 
 app.use('/user', userRouter);
 app.use('/reimbursments', reimRouter);
-
+/*
 process.on('unhandledRejection', () => {
     db.end().then(() => {
         console.log('Database pool closed');
+        
     });
 });
+*/
 
 // start listening at this port
 app.listen(port, ()=>{

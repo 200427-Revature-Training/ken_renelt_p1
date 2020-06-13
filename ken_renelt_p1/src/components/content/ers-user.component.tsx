@@ -10,20 +10,16 @@ import { RouteComponentProps, withRouter } from 'react-router';
 const reimbList:Ers_reimbursment[] = [];
 
 interface userProps {
-    user: User,
-    // listofReimb:Ers_reimbursment[],
-    //setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
+    user: User
 }
+
 export const UserComponent: React.FC<RouteComponentProps> = (props) => {
-   // const [view, setView] = useState('MAIN-VIEW');
-    //const userName = (userProps.user.userName) ? userProps.user.userName : "login";
 
     if(localStorage.getItem('accessToken'))
     {
-        console.log('I have a token' + localStorage.getItem('accessToken'));
         if(localStorage.getItem('accessToken')?.length)
         {
-            console.log('im inside length');
+            console.log('we have a token continue');
         }
         else
         {
@@ -45,13 +41,14 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
 
     useEffect(() => {
         addReim();
+        
     },[]);
 
 
     let userRole = localStorage.getItem('userRole'); 
 
     const addReim = () => {    
-        console.log('whats my userRole = ' + userRole);
+       // console.log('whats my userRole = ' + userRole);
         if(userRole != '')
         {
             if(userRole == '1')
@@ -74,7 +71,10 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
         
     <section id="user-comp" className="container">
         <div className="rowc">
-            <Typography>Click to view your ticket</Typography>
+           
+           <div className="user-header"> 
+               <Typography >Click to view your ticket</Typography>
+           </div>
             <div id="list-side" className="col-sm">
                 <ErsReimbListComponent reimbursments={reimbursments}></ErsReimbListComponent>
             </div>

@@ -1,5 +1,5 @@
 import * as userRemote from '../../../remotes/user-remote';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles, unstable_createMuiStrictModeTheme } from '@material-ui/core';
 import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -82,9 +82,11 @@ export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
     setInputDescription('');
     setInputTypeId('');
     setInputreciept('');
-
-
 };
+
+useEffect(() => {
+      
+}, []);
 
 return (
     <Container component="main" maxWidth="xs">

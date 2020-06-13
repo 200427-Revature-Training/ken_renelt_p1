@@ -1,6 +1,8 @@
+/* istanbul ignore file */
 import { db } from './db';
 import { Reimbursment, ReimbursmentRow } from '../data-models/reimbursment-model';
 import { stringify } from 'querystring';
+import { json } from 'body-parser';
 
 // read
 export function getAllReimbursments(): Promise<Reimbursment[]>{
@@ -46,15 +48,30 @@ export function createReimbursment(reim:Reimbursment): Promise<Reimbursment>{
 
 // update
 // used for approval needs help works in dbeaver
-export function patchReimbursment(reim:Reimbursment): Promise<Reimbursment>{
+export function patchReimbursment(reim:any): Promise<Reimbursment>{
     const sql = 'UPDATE ers_reimbursement set reimb_resolved = $1, reimb_status_id = $2, reimb_resolver = $3 WHERE reimb_id = $4';
 
-    console.log('sending patch for reimb dao');
+    console.log('sending patch for reimb dao' + JSON.stringify(reim));
 
     return db.query<ReimbursmentRow>(sql, [
-        reim.resolved,
-        reim.statusID,
-        reim.resolver,
+        reim.resolved_date,
+        reim.status_id,
+        reim.resolver_id,
         reim.id
-    ]).then(result => result.rows.map(row => Reimbursment.from(row))[0]);
+    ]).then(result => result.rows.map(row => Reimbursment.from(row))[0]).catch((e) => {
+        console.log("this is my error"+ e);
+        return undefined;
+    })
 }
+
+/*
+reimb_id
+reimb_amount integer,
+reimb_submitted TimeStamp,
+reimb_resolved timestamp,
+reimb_description varchar(250),
+reimb_author integer REFERENCES ers_users(user_id),
+reimb_resolver integer REFERENCES ers_users(user_id),
+reimb_status_id integer REFERENCES ers_reimbursement_status(reimb_status_id),
+reimb_type_id integer REFERENCES ers_reimbursement_type(id)
+*/

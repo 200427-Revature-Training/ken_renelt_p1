@@ -21,8 +21,9 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
     
         const classes = useStyles();
       
+        const userName = localStorage.getItem('userName');
         const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  
+  console.log('user name = ' + userName)
         const user:User = {
             userName: '',
             userEmail: '',
@@ -70,7 +71,7 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
                     <MenuItem onClick={() => props.history.push('/form')}>Form submit</MenuItem>
                   </Menu>
               <Typography variant="h6" className={classes.title}>
-                Welcome
+                Welcome {userName}
               </Typography>
              <div className="logOut"> 
                <Button color="inherit"  onClick={() => logOutButton()} >Log Out</Button>

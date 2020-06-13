@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { db } from './db';
 import { User, UserRow } from '../data-models/user-data-model';
 
@@ -22,7 +24,11 @@ export function registerUser(user:User): Promise<User>{
     user.userLastName,
     user.userEmail,
     user.userRollId
-  ]).then(result => result.rows.map(row => User.from(row))[0]);
+  ]).then(result => result.rows.map(row => User.from(row))[0]).catch((e) => {
+    console.log(e);
+     return undefined;
+  }
+  );
 }
 
 export function loginUser(user:User):Promise<User> {

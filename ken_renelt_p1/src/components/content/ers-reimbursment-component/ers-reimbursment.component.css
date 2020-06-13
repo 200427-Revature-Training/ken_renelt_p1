@@ -2,7 +2,34 @@
     border: solid 2px black;
 }
 
-#listButton {
-    width: 20vw;
+.approveButton {
+    border-radius: 10px;
+    display: flexbox;
+    flex-grow: 2;
+    width: 17vw;
     height: 50px;
+    background-color: rgb(143, 248, 208);
+}
+
+.denyButton {
+    border-radius: 10px;
+    display: flexbox;
+    flex-grow: 2;
+    width: 17vw;
+    height: 50px;
+    background-color: rgb(250, 123, 123);
+}
+
+.viewButton {
+    border-radius: 10px;
+    display: flexbox;
+    flex-grow: 2;
+    width: 17vw;
+    height: 50px;
+}
+
+
+.reimb-toolbar {
+    width: auto;
+    background-color:  rgb(12, 2, 65);
 }
