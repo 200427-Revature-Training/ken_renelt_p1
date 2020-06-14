@@ -1,8 +1,6 @@
 /* istanbul ignore file */
 import { db } from './db';
 import { Reimbursment, ReimbursmentRow } from '../data-models/reimbursment-model';
-import { stringify } from 'querystring';
-import { json } from 'body-parser';
 
 // read
 export function getAllReimbursments(): Promise<Reimbursment[]>{
@@ -34,15 +32,16 @@ export function getReimbursmentForUser(userId:number): Promise<Reimbursment[]>{
 export function createReimbursment(reim:Reimbursment): Promise<Reimbursment>{
     console.log(JSON.stringify(reim));
 
-    const sql = 'INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_description, reimb_author, reimb_type_id) \
-    VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    const sql = 'INSERT INTO ers_reimbursement (reimb_amount, reimb_submitted, reimb_description, reimb_author, reimb_type_id, reimb_status_id) \
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
 
     return db.query<ReimbursmentRow>(sql, [
         reim.amount,
         reim.submitted,
         reim.description,
         reim.author,
-        reim.typeID
+        reim.typeID,
+        2
     ]).then(result => result.rows.map(row => Reimbursment.from(row))[0]);
 }
 
@@ -64,6 +63,17 @@ export function patchReimbursment(reim:any): Promise<Reimbursment>{
     })
 }
 
+export function getReimbursmentApproved(): Promise<Reimbursment[]> {
+    console.log('get all approved');
+    const sql = 'SELECT * FROM ers_reimbursement WHERE reimb_status_id = 1';
+
+    return db.query<ReimbursmentRow>(sql, []).then(result => {
+        const rows:ReimbursmentRow[] = result.rows;
+        const allRows:Reimbursment[] = rows.map(row => Reimbursment.from(row));
+
+        return allRows;
+    })
+}
 /*
 reimb_id
 reimb_amount integer,

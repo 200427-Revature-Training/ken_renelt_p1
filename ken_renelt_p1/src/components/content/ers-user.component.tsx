@@ -41,14 +41,47 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
 
     useEffect(() => {
         addReim();
+        justApproved();
+        justNeedApproval();
         
     },[]);
 
 
     let userRole = localStorage.getItem('userRole'); 
 
+    const justApproved = () =>
+    {
+        userRemote.getApproved().then(reim => {
+        return  setReimbursments(reim);
+        })
+    }
+
+    const justNeedApproval = () =>
+    {
+       userRemote.getAllReim().then(reim => {
+        return  setReimbursments(reim);  
+       })
+    }
+ 
+    const renderManagerButtons = () => {
+        if(userRole == '1')
+        {
+            return (
+                <div>
+                    <span>
+                    <button onClick={() => addReim()}>View all</button>
+                </span>
+                <span>
+                    <button onClick={() => justApproved()}>View Approved</button>
+                </span>
+                <span>
+                    <button onClick={() => justNeedApproval()}>Needs Approval</button>
+                </span>
+                </div>
+            )
+        }
+    }
     const addReim = () => {    
-       // console.log('whats my userRole = ' + userRole);
         if(userRole != '')
         {
             if(userRole == '1')
@@ -71,10 +104,10 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
         
     <section id="user-comp" className="container">
         <div className="rowc">
-           
            <div className="user-header"> 
                <Typography >Click to view your ticket</Typography>
            </div>
+            {renderManagerButtons()}
             <div id="list-side" className="col-sm">
                 <ErsReimbListComponent reimbursments={reimbursments}></ErsReimbListComponent>
             </div>

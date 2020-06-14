@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, makeStyles, Menu, MenuItem, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -23,6 +23,11 @@ export const NavComponent:React.FC<RouteComponentProps> = (props) => {
       
         const userName = localStorage.getItem('userName');
         const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+       
+        useEffect(() => {
+      
+        }, []);
+        
   console.log('user name = ' + userName)
         const user:User = {
             userName: '',

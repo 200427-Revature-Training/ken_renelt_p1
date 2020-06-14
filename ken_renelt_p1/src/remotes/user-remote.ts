@@ -1,7 +1,6 @@
 import { Ers_reimbursment } from '../data-models/Ers_reimbursment';
 import { internalAxios } from './internal-axios';
 import { userLoginCredentials, User } from '../data-models/user-data-model';
-import { timeEnd } from 'console';
 
 
 interface UserProfile {
@@ -12,14 +11,28 @@ interface UserLoginInterface{
     accessToken:{accessToken:string},
     newUser:User
 }
-//export const getUser = async (id:number) => {
-//    const reimbs = await Axios.get<UserProfile>('/user');
-//    return response;
-//}
 
 export const getAllReim = async () => {
     console.log('get all');
     const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments');
+    return response.data;
+}
+
+export const getApproved = async () => {
+    console.log('get approved');
+    try {
+            const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/approved');
+    return response.data;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+
+}
+
+export const getNeedsApproval = async () => {
+    console.log('get needs approval');
+    const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/denied');
     return response.data;
 }
 
@@ -51,4 +64,20 @@ export const postForm = async (payload:Ers_reimbursment) => {
 
 export const approveTicket = async (payload:any) => {
     const response = await internalAxios.patch<Ers_reimbursment>('/reimbursments', payload);
+    return response;
+}
+
+//https://kenrevatureproject.s3.us-east-2.amazonaws.com/ticket1.png
+export const saveImage = async (payload:any) => {
+    console.log("lets see what we are sending here" + JSON.stringify(payload));
+    const response = await internalAxios.post(`/reimbursments/file-upload`, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        return response;
+      }).catch(error => {
+        console.log('do something with your error' + error);
+      });
+      return response;
 }

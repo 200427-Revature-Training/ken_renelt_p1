@@ -5,6 +5,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { Toolbar, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@material-ui/core';
 import * as userRemote from '../../../remotes/user-remote';
 
+let approved = '';
+
 interface ErsReimbComponentProps {
     ers_reimbursment: Ers_reimbursment;
 }
@@ -18,18 +20,19 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
     const managerButton = localStorage.getItem('userRole');
 
 
-    const [open, setOpen] = useState(false);
+    //const [open, setOpen] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [ticketColor, setTicketColor] = useState(approved);
+    const [submitButtonClass, setSubmitButtonClass] = useState('');
       
     useEffect(() => {
         showApproveButton();
-        showDenyButton()
+        
       }, []);
 
     const submitionDate:string = new Date(ers_reimbursment.submitted).toUTCString();
-    const resolvedDate:string = new Date(ers_reimbursment.resolved).toUTCString();
-   // const name:string = ers_reimbursment.author;
-
+    const resolvedDate:string = new Date(ers_reimbursment.resolved).toUTCString()
+    
    const approveButtonHandler = async () => {
     const payload = {
         id: ers_reimbursment.id,
@@ -40,32 +43,32 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
 
     const response = await userRemote.approveTicket(payload).then(() => {
         console.log('sent approval');
+        
     } 
-    );
-   }
+    ).finally(() => {
 
-   const denyButtonHandler = () => {
-
-   }
+        setSubmitButtonClass('hidden');
+        setTicketColor('approved');
+    })};
    
-    const showApproveButton = () => {
-
-        if(managerButton && managerButton == '1') 
-        {
-            console.log('i am manager');
-            return (
-                 <button onClick={() => approveButtonHandler()} className="approveButton">Approve</button> 
-            );
-        }
+   
+    if (ers_reimbursment.resolved)
+    {
+        console.log('status id = ' + ers_reimbursment.resolved.getFullYear);
+        console.log(' I am setting to approved')
+        approved = 'approved';
     }
 
-    const showDenyButton = () => {
+    const showApproveButton = () => {
 
-        if(managerButton && managerButton == '1') 
+        const apButtonClass = 'approveButton'
+        if(managerButton && managerButton == '1' && ers_reimbursment.resolved == null) 
         {
             console.log('i am manager');
             return (
-                 <button className="denyButton">Deny</button> 
+                <span className={submitButtonClass}>
+                 <button className={apButtonClass} onClick={() => approveButtonHandler()}>Approve</button> 
+                 </span>
             );
         }
     }
@@ -74,7 +77,7 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
 
         <div id="ers-list">
 
-<TableContainer component={Paper}>
+<TableContainer component={Paper} className={ticketColor}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -97,11 +100,10 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
       </Table>
     </TableContainer>
 
-        <Toolbar className="reimb-toolbar">
+        <Toolbar className={approved}>
             <div>
-        <button className="viewButton" onClick={() => setModalVisible(true)}>Click to View</button>
+        <button  className='viewButton' onClick={() => setModalVisible(true)}>Click to View</button>
         {  showApproveButton() }
-        {  showDenyButton() }
         </div>
         </Toolbar>
         <Modal show={modalVisible} onHide={() => setModalVisible(false)}>
@@ -111,20 +113,20 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
                 <Modal.Body>
                     <Form>
                         <Form.Group>
-                            <Form.Label>First Name:</Form.Label>
-                            <Form.Control value={ers_reimbursment.description} />
+                            <Form.Label >First Name:</Form.Label>
+                            <Form.Control readOnly value={ers_reimbursment.description} />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Last Name:</Form.Label>
-                            <Form.Control  value={ers_reimbursment.amount} />
+                            <Form.Control readOnly value={ers_reimbursment.amount} />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>submitted :</Form.Label>
-                            <Form.Control value={submitionDate}/>
+                            <Form.Label >submitted :</Form.Label>
+                            <Form.Control readOnly value={submitionDate}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>resolved status:</Form.Label>
-                            <Form.Control value={resolvedDate} />
+                            <Form.Control readOnly value={resolvedDate} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>

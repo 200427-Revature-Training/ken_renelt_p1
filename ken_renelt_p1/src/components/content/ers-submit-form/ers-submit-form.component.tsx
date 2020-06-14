@@ -4,10 +4,6 @@ import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles,
 import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-//interface LoginComponentProps {
- //   setView: ( str: 'LOGIN' | 'MAIN-VIEW' | 'ADD-VIEW' | 'APPROVE-VIEW' | 'STATUS-VIEW') => void;
-//}
-
 const useStyles = makeStyles((theme) => ({
     root: {
       height: '100vh',
@@ -31,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
+  const filestate = {
+    file: []
+  };
+
 export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
 
   if(localStorage.getItem('accessToken'))
@@ -51,20 +51,21 @@ export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
       console.log('I must be null' + localStorage.getItem('accessToken'))
       props.history.push('/login');
   }
-  
+
    const [inputTotalAmount, setInputTotalAmount] = useState('');
    const [inputDescription, setInputDescription] = useState('');
    const [inputTypeId, setInputTypeId] = useState('');
 
    const [inputreciept, setInputreciept] = useState('');
-
+   const [inputFile, setInputFile] = useState(filestate);
    const classes = useStyles();
-    const submitReimbursment = async () => {
+   
+   const submitReimbursment = async () => {
     console.log('I am ers reimb form component');
 
     const amountTo:number = parseInt(inputTotalAmount);
     let authorId:any = (localStorage.getItem('userId'));
-  
+
     const payload:Ers_reimbursment = {
       id:1,
       amount:amountTo,
@@ -72,17 +73,39 @@ export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
       description:inputDescription,
       submitted: new Date(),
       resolved: new Date(),
-      typeID:parseInt(inputTypeId)
+      typeID:parseInt(inputTypeId),
+      reciept:inputreciept,
+      statusId:0
     }
 
-    console.log(inputTypeId);
+    console.log("we are the inpute type id " + inputTypeId);
     const response = await userRemote.postForm(payload);
 
     setInputTotalAmount('');
     setInputDescription('');
     setInputTypeId('');
     setInputreciept('');
+
 };
+
+const handleFileUpload = (e:any) => {
+  setInputFile({file: e.target.files});
+  console.log('settomg the file' + JSON.stringify(filestate.file[0]))
+}
+
+const fileTobeSubmitted = async (e:any) => {
+  e.preventDefault();
+  const formData = new FormData();
+ // const fileToBeSent =  filestate.file[0];
+  formData.append('file', filestate.file[0]);
+
+const response = await userRemote.saveImage(formData);
+console.log("I am logging a file" + JSON.stringify(formData));
+// if(file)
+ // {
+  //  setInputreciept(e.target.files[0])
+  //}
+}
 
 useEffect(() => {
       
@@ -138,19 +161,7 @@ return (
             autoComplete="type-id"
             onChange={(e) => setInputTypeId(e.target.value) }
           />
-            <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            value={inputreciept}
-            required
-            name="reciept"
-            label="reciept"
-            type="reciept"
-            id="reciept"
-            autoComplete="reciept"
-            onChange={(e) => setInputreciept(e.target.value) }
-          />
+          <input type="file" onChange={(e) => handleFileUpload(e)}></input>
         </form>
         <Button
             type="submit"

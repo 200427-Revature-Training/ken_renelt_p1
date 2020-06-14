@@ -16,3 +16,7 @@ export function createReimbursment(reim:Reimbursment): Promise<Reimbursment> {
 export function patchReimbursment(reim:Reimbursment): Promise<Reimbursment>{
     return reimBDao.patchReimbursment(reim);
 }
+
+export function getReimbursmentApproved(): Promise<Reimbursment[]> {
+    return reimBDao.getReimbursmentApproved();
+}

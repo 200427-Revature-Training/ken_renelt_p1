@@ -36,13 +36,13 @@ const useStyles = makeStyles((theme) => ({
   const classes = useStyles();
 
     useEffect(() => {
-      loginUser();
+      // loginUser();
     }, []);
 
-    const [view, setView] = useState('LOGIN');
+    // const [view, setView] = useState('LOGIN');
     const [inputUserName, setInputUserName] = useState('');
     const [inputPassword, setInputPassword] = useState('');
-    let isConnected = false;
+   // let isConnected = false;
    
     const loginUser = async () => {
       if(inputUserName.length < 1 || inputPassword.length < 1)
