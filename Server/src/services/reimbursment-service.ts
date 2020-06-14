@@ -20,3 +20,7 @@ export function patchReimbursment(reim:Reimbursment): Promise<Reimbursment>{
 export function getReimbursmentApproved(): Promise<Reimbursment[]> {
     return reimBDao.getReimbursmentApproved();
 }
+
+export function getReimbursmentNeedAppoval(): Promise<Reimbursment[]> {
+    return reimBDao.getReimbursmentNeedAppoval();
+}

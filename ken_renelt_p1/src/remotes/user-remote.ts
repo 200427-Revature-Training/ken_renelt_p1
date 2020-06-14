@@ -21,7 +21,7 @@ export const getAllReim = async () => {
 export const getApproved = async () => {
     console.log('get approved');
     try {
-            const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/approved');
+            const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/approved/1');
     return response.data;
     } catch (error) {
         console.log(error);
@@ -32,7 +32,7 @@ export const getApproved = async () => {
 
 export const getNeedsApproval = async () => {
     console.log('get needs approval');
-    const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/denied');
+    const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/denied/2');
     return response.data;
 }
 

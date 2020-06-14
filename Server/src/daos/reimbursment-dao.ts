@@ -74,6 +74,18 @@ export function getReimbursmentApproved(): Promise<Reimbursment[]> {
         return allRows;
     })
 }
+
+export function getReimbursmentNeedAppoval(): Promise<Reimbursment[]> {
+    console.log('get all need approval');
+    const sql = 'SELECT * FROM ers_reimbursement WHERE reimb_status_id = 2';
+
+    return db.query<ReimbursmentRow>(sql, []).then(result => {
+        const rows:ReimbursmentRow[] = result.rows;
+        const allRows:Reimbursment[] = rows.map(row => Reimbursment.from(row));
+
+        return allRows;
+    })
+}
 /*
 reimb_id
 reimb_amount integer,

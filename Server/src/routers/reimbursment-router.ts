@@ -82,7 +82,7 @@ reimRouter.get('/:id',  (request, response, next) => {
     });
 })
 
-reimRouter.get('/approved',  (request, response, next) => {
+reimRouter.get('/approved/:id',  (request, response, next) => {
    console.log('b4 authenticate reimb router ');
     if(!authenticateToken)
     return response.sendStatus(403);
@@ -96,11 +96,11 @@ console.log('after auth');
         response.sendStatus(500);
     });
 })
-/*
-reimRouter.get('/denied',  (request, response, next) => {
+
+reimRouter.get('/denied/:id',  (request, response, next) => {
     if(!authenticateToken)
     return response.sendStatus(403);
-
+console.log("denied router");
      const id = +request.params.id;
     ReimbService.getReimbursmentNeedAppoval().then(reimbursments => {
         response.json(reimbursments);
@@ -110,7 +110,7 @@ reimRouter.get('/denied',  (request, response, next) => {
         response.sendStatus(500);
     });
 })
-*/
+
 
 reimRouter.post('', (request, response, next) => {
     if(!authenticateToken)

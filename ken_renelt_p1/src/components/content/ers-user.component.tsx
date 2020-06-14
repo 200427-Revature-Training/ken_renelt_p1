@@ -58,7 +58,7 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
 
     const justNeedApproval = () =>
     {
-       userRemote.getAllReim().then(reim => {
+       userRemote.getNeedsApproval().then(reim => {
         return  setReimbursments(reim);  
        })
     }
