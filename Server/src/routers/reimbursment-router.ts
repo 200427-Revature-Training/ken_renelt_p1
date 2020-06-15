@@ -15,11 +15,13 @@ const reimbursments = [];
 const secretKey = 'justabunchofcharstolist';
 
 
-const bucketName = 'kenrevatureproject';
-const AWSAccessKeyId = 'AKIAJVMUVWXC5BJOKGGQ'
-const AWSSecretKey = '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';
+const bucketNameKen = 'sadd';
+const AWSAccessKeyId = 'asd'
+const AWSSecretKey = 'asd/EVH+Zj72ivFIIt';
 
 AWS.config.update({
+    region:'us-east-2',
+    bucketName: bucketNameKen,
     accessKeyId: AWSAccessKeyId,
     secretAccessKey: AWSSecretKey
   });
@@ -177,7 +179,7 @@ console.log('i am saving reimbursment');
 
 
 // Define POST route
-reimRouter.post('/file-upload', async (request, response, next) => {
+reimRouter.post('/fileupload', async (request, response, next) => {
   const form = new multiparty.Form();
   console.log('trying to log reciept and save reciept' + JSON.stringify(request.body));
     form.parse(request, async (error, fields, files) => {

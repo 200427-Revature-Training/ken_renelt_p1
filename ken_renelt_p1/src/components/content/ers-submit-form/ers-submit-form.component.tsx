@@ -1,6 +1,6 @@
 import * as userRemote from '../../../remotes/user-remote';
 import React, { useState, useEffect } from 'react';
-import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles, unstable_createMuiStrictModeTheme } from '@material-ui/core';
+import { Button, Container, CssBaseline, Typography, TextField, Box, makeStyles, Select } from '@material-ui/core';
 import { Ers_reimbursment } from '../../../data-models/Ers_reimbursment';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -27,11 +27,12 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-  const filestate = {
-    file: []
-  };
 
 export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
+
+  let fileToBeSent:File;
+  let fileName = '';
+  let fileType;
 
   if(localStorage.getItem('accessToken'))
   {
@@ -56,16 +57,16 @@ export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
    const [inputDescription, setInputDescription] = useState('');
    const [inputTypeId, setInputTypeId] = useState('');
 
-   const [inputreciept, setInputreciept] = useState('');
-   const [inputFile, setInputFile] = useState(filestate);
    const classes = useStyles();
    
    const submitReimbursment = async () => {
     console.log('I am ers reimb form component');
 
+    fileTobeSubmitted();
     const amountTo:number = parseInt(inputTotalAmount);
     let authorId:any = (localStorage.getItem('userId'));
 
+    const idToBeSubmitted = (parseInt(inputTypeId) < 5) ? parseInt(inputTypeId) : 4;
     const payload:Ers_reimbursment = {
       id:1,
       amount:amountTo,
@@ -73,38 +74,57 @@ export const ErsSubmitForm: React.FC<RouteComponentProps> = (props) => {
       description:inputDescription,
       submitted: new Date(),
       resolved: new Date(),
-      typeID:parseInt(inputTypeId),
-      reciept:inputreciept,
+      typeID:idToBeSubmitted,
+      reciept:fileToBeSent.name,
       statusId:0
     }
 
-    console.log("we are the inpute type id " + inputTypeId);
+    console.log("we are the inpute type id " + JSON.stringify(payload));
     const response = await userRemote.postForm(payload);
 
     setInputTotalAmount('');
     setInputDescription('');
     setInputTypeId('');
-    setInputreciept('');
-
+  
+    fileName = '';
+    fileType = '';
 };
 
+const handleInputId = (e:any) =>
+{
+  const idToBeSubmitted = (parseInt(inputTypeId) < 5) ? inputTypeId : '4';
+  setInputTypeId(idToBeSubmitted);
+}
+const onFileChange = (files: FileList | null) => { 
+
+  console.log(files);
+  if(files)
+  {
+    fileToBeSent = files[0];
+    let fileParts = files[0].name.split('.');
+    fileName = fileParts[0];
+    fileType = fileParts[1];
+  }
+       
+  console.log("whats the file name = " + fileToBeSent.name);
+}; 
+
 const handleFileUpload = (e:any) => {
-  setInputFile({file: e.target.files});
-  console.log('settomg the file' + JSON.stringify(filestate.file[0]))
+  console.log(e.uploadInput);
 }
 
-const fileTobeSubmitted = async (e:any) => {
-  e.preventDefault();
-  const formData = new FormData();
- // const fileToBeSent =  filestate.file[0];
-  formData.append('file', filestate.file[0]);
+const handleInputChange = (e:any) => {
+console.log('setting input ' + e);
+  setInputTypeId(e);
 
-const response = await userRemote.saveImage(formData);
-console.log("I am logging a file" + JSON.stringify(formData));
-// if(file)
- // {
-  //  setInputreciept(e.target.files[0])
-  //}
+}
+const fileTobeSubmitted = async () => {
+  const formData = new FormData();
+ 
+  formData.append('file', fileToBeSent);
+
+  const response = await userRemote.saveImage(formData);
+  console.log("whats the file name = " + fileToBeSent.name);
 }
 
 useEffect(() => {
@@ -149,6 +169,7 @@ return (
             onChange={(e) => setInputDescription(e.target.value) }
           />
             <TextField
+            aria-readonly
             variant="outlined"
             value={inputTypeId}
             margin="normal"
@@ -159,9 +180,25 @@ return (
             type="type-id"
             id="type-id"
             autoComplete="type-id"
-            onChange={(e) => setInputTypeId(e.target.value) }
+            onChange={(e) => handleInputId(e.target.value) }
+            
           />
-          <input type="file" onChange={(e) => handleFileUpload(e)}></input>
+          <Select
+          native
+          value={inputTypeId}
+          onChange={(e) => handleInputChange(e.target.value)}
+          inputProps={{
+            name: 'age',
+            id: 'age-native-simple',
+          }}
+        >
+          <option aria-label="None" value="" />
+          <option value={1}>Lodging</option>
+          <option value={2}>Travel</option>
+          <option value={3}>Food</option>
+          <option value={3}>Food</option>
+        </Select>
+          <input type="file" onChange={(e) => onFileChange(e.target.files)}></input>
         </form>
         <Button
             type="submit"

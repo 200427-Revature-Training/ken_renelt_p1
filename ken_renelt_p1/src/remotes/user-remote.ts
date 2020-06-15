@@ -13,13 +13,13 @@ interface UserLoginInterface{
 }
 
 export const getAllReim = async () => {
-    console.log('get all');
+    // console.log('get all');
     const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments');
     return response.data;
 }
 
 export const getApproved = async () => {
-    console.log('get approved');
+    // console.log('get approved');
     try {
             const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/approved/1');
     return response.data;
@@ -31,16 +31,16 @@ export const getApproved = async () => {
 }
 
 export const getNeedsApproval = async () => {
-    console.log('get needs approval');
+   // console.log('get needs approval');
     const response = await internalAxios.get<Ers_reimbursment[]>('/reimbursments/denied/2');
     return response.data;
 }
 
 export const getUserReim = async () => {
-    console.log('get user reim')
+   // console.log('get user reim')
     const tempID = localStorage.getItem('userId');
     const url = '/reimbursments/' + tempID;
-    console.log(url);
+  //  console.log(url);
     const response = await internalAxios.get<Ers_reimbursment[]>(url);
     return response.data;
 }
@@ -67,10 +67,11 @@ export const approveTicket = async (payload:any) => {
     return response;
 }
 
-//https://kenrevatureproject.s3.us-east-2.amazonaws.com/ticket1.png
+
+
 export const saveImage = async (payload:any) => {
     console.log("lets see what we are sending here" + JSON.stringify(payload));
-    const response = await internalAxios.post(`/reimbursments/file-upload`, payload, {
+    const response = await internalAxios.post(`/reimbursments/fileupload`, payload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -18,12 +18,11 @@ function rand() {
 export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbursment}) => {
 
     const managerButton = localStorage.getItem('userRole');
-
-
     //const [open, setOpen] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [ticketColor, setTicketColor] = useState(approved);
+    const [ticketColor, setTicketColor] = useState('');
     const [submitButtonClass, setSubmitButtonClass] = useState('');
+    const [denyButtonClass, setDenyButtonClass] = useState('');
       
     useEffect(() => {
         showApproveButton();
@@ -32,7 +31,8 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
 
     const submitionDate:string = new Date(ers_reimbursment.submitted).toUTCString();
     const resolvedDate:string = new Date(ers_reimbursment.resolved).toUTCString()
-    
+ // console.log('status id' + ers_reimbursment.statusId);
+
    const approveButtonHandler = async () => {
     const payload = {
         id: ers_reimbursment.id,
@@ -51,12 +51,31 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
         setTicketColor('approved');
     })};
    
+    const denyButtonHandler = async () => {
+        const payload = {
+            id: ers_reimbursment.id,
+            resolver_id: localStorage.getItem('userId'),
+            resolved_date: new Date(),
+            status_id: 2
+        }
+    
+        const response = await userRemote.approveTicket(payload).then(() => {
+            console.log('sent denial');
+            
+        } 
+        ).finally(() => {
+    
+            setDenyButtonClass('hidden');
+            setTicketColor('approved');
+        })};
+
    
-    if (ers_reimbursment.resolved)
+    if (ers_reimbursment.statusId)
     {
-        console.log('status id = ' + ers_reimbursment.resolved.getFullYear);
-        console.log(' I am setting to approved')
+       if( ers_reimbursment.statusId === 1)
         approved = 'approved';
+        else if(ers_reimbursment.statusId === 2)
+        approved = 'denied';
     }
 
     const showApproveButton = () => {
@@ -64,10 +83,24 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
         const apButtonClass = 'approveButton'
         if(managerButton && managerButton == '1' && ers_reimbursment.resolved == null) 
         {
-            console.log('i am manager');
+           // console.log('i am manager');
             return (
                 <span className={submitButtonClass}>
                  <button className={apButtonClass} onClick={() => approveButtonHandler()}>Approve</button> 
+                 </span>
+            );
+        }
+    }
+
+    const showDenyButton = () => {
+
+        const apButtonClass = 'denyButton'
+        if(managerButton && managerButton == '1' && ers_reimbursment.resolved == null) 
+        {
+          //  console.log('i am manager');
+            return (
+                <span className={denyButtonClass}>
+                 <button className={apButtonClass} onClick={() => denyButtonHandler()}>Deny</button> 
                  </span>
             );
         }
@@ -104,6 +137,7 @@ export const ErsReimbComponent: React.FC<ErsReimbComponentProps> = ({ers_reimbur
             <div>
         <button  className='viewButton' onClick={() => setModalVisible(true)}>Click to View</button>
         {  showApproveButton() }
+        {  showDenyButton() }
         </div>
         </Toolbar>
         <Modal show={modalVisible} onHide={() => setModalVisible(false)}>

@@ -93,7 +93,7 @@ export const UserComponent: React.FC<RouteComponentProps> = (props) => {
             }
             else
             {
-                console.log('user roll anything else');
+                // console.log('user roll anything else');
                 userRemote.getUserReim().then(reim => {
                     return setReimbursments(reim);
                 })
